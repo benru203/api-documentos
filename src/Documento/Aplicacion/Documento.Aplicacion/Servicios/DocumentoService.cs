@@ -31,5 +31,32 @@ namespace Documento.Aplicacion.Servicios
             }
             return new DocumentoDTO(documento.Id, documento.Titulo.Valor, documento.Autor.Valor, documento.Tipo.Valor, documento.Estado.Valor, documento.FechaRegistro);
         }
+
+        public async Task ActualizarDocumento(Guid id, ActualizaDocumentoDTO documentoDTO)
+        {
+            var documento = await _documentosRepository.GetByIdAsync(id);
+            if (documento is null)
+            {
+                throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(documentoDTO.Titulo))
+            {
+                documento.SetTitulo(documentoDTO.Titulo);
+            }
+            if (!string.IsNullOrWhiteSpace(documentoDTO.Autor))
+            {
+                documento.SetAutor(documentoDTO.Autor);
+            }
+            if (!string.IsNullOrWhiteSpace(documentoDTO.Tipo))
+            {
+                documento.SetTipo(documentoDTO.Tipo);
+            }
+            if (!string.IsNullOrWhiteSpace(documentoDTO.Estado))
+            {
+                documento.SetEstado(documentoDTO.Estado);
+            }
+            await _documentosRepository.UpdateAsync(documento);
+        }
     }
 }
