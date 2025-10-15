@@ -118,7 +118,7 @@ namespace Documento.Api.Test
             var documentoId = Guid.NewGuid();
             _documentoServiceMock.Setup(s => s.ObtenerDocumentoPorId(documentoId)).ReturnsAsync((DocumentoDTO?)null);
 
-            var result = await _controller.ObtenerDocumentoId(Guid.NewGuid());
+            var result = await _controller.ObtenerDocumentoId(documentoId);
             Assert.IsType<NotFoundResult>(result);
             _documentoServiceMock.Verify(s => s.ObtenerDocumentoPorId(documentoId), Times.Once);
         }
