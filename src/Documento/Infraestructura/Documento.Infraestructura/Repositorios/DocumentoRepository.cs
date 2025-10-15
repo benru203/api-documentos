@@ -34,9 +34,10 @@ namespace Documento.Infraestructura.Repositorios
             return await _context.Documentos.FirstOrDefaultAsync(d => d.Id == id);
         }
 
-        public Task UpdateAsync(Dominio.Entidades.Documento documento)
+        public async Task UpdateAsync(Dominio.Entidades.Documento documento)
         {
-            throw new NotImplementedException();
+            _context.Documentos.Update(documento);
+            await _context.SaveChangesAsync();
         }
     }
 }
