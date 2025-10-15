@@ -62,6 +62,10 @@ namespace Documento.Api.Controllers
                 await _service.ActualizarDocumento(Id, actualizaDocumentoDTO);
                 return NoContent();
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);

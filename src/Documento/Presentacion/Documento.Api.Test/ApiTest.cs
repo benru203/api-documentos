@@ -166,7 +166,6 @@ namespace Documento.Api.Test
 
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
-
             Assert.Equal($"No se encontró un documento con el Id {documentoId}", notFoundResult.Value);
 
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
