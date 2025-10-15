@@ -84,7 +84,7 @@ namespace Documento.Api.Test
 
 
         [Fact]
-        public async Task ObtenerDocumentoPorId_DebeRetornar_200_Documento_Correctamente()
+        public async Task ObtenerDocumentoPorId_DebeRetornar_202_Documento_Correctamente()
         {
             var documentoId = Guid.NewGuid();
             var documentoEsperado = new DocumentoDTO
@@ -206,6 +206,20 @@ namespace Documento.Api.Test
 
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Never);
         }
+
+        [Fact]
+        public async Task EliminarDocumento__DebeRetornar_204()
+        {
+            var documentoId = Guid.NewGuid();
+
+            _documentoServiceMock.Setup(s => s.EliminarDocumento(documentoId)).Returns(Task.CompletedTask);
+
+            var result = await _controller.EliminarDocumento(documentoId);
+
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(204, noContentResult.StatusCode);
+        }
+
 
     }
 }
