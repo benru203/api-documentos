@@ -7,14 +7,14 @@ namespace Documento.Aplicacion.Test
 {
     public class AplicacionDocumentoTest
     {
-        private readonly Mock<IDocumentosRepository> _documentoRepositoryMock;
+        private readonly Mock<IDocumentoRepository> _documentoRepositoryMock;
 
         private readonly DocumentoService _documentoService;
 
 
         public AplicacionDocumentoTest()
         {
-            _documentoRepositoryMock = new Mock<IDocumentosRepository>();
+            _documentoRepositoryMock = new Mock<IDocumentoRepository>();
 
             _documentoService = new DocumentoService(_documentoRepositoryMock.Object);
         }

@@ -1,7 +1,7 @@
 ﻿
 namespace Documento.Dominio.Interfaces.Repositorios
 {
-    public interface IDocumentosRepository
+    public interface IDocumentoRepository
     {
         Task<IEnumerable<Entidades.Documento>> GetAllAsync();
 
