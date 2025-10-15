@@ -58,5 +58,16 @@ namespace Documento.Aplicacion.Servicios
             }
             await _documentosRepository.UpdateAsync(documento);
         }
+
+        public async Task EliminarDocumento(Guid id)
+        {
+            var documento = await _documentosRepository.GetByIdAsync(id);
+            if (documento is null)
+            {
+                throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
+            }
+
+            await _documentosRepository.DeleteAsync(documento.Id);
+        }
     }
 }
