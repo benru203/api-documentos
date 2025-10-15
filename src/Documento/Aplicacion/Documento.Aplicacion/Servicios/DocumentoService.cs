@@ -24,22 +24,13 @@ namespace Documento.Aplicacion.Servicios
 
         public async Task<DocumentoDTO> ObtenerDocumentoPorId(Guid id)
         {
-            var documento = await _documentosRepository.GetByIdAsync(id);
-            if (documento is null)
-            {
-                throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
-            }
+            var documento = await DocumentoById(id);
             return new DocumentoDTO(documento.Id, documento.Titulo.Valor, documento.Autor.Valor, documento.Tipo.Valor, documento.Estado.Valor, documento.FechaRegistro);
         }
 
         public async Task ActualizarDocumento(Guid id, ActualizaDocumentoDTO documentoDTO)
         {
-            var documento = await _documentosRepository.GetByIdAsync(id);
-            if (documento is null)
-            {
-                throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
-            }
-
+            var documento = await DocumentoById(id);
             if (!string.IsNullOrWhiteSpace(documentoDTO.Titulo))
             {
                 documento.SetTitulo(documentoDTO.Titulo);
@@ -61,13 +52,18 @@ namespace Documento.Aplicacion.Servicios
 
         public async Task EliminarDocumento(Guid id)
         {
+            var documento = await DocumentoById(id);
+            await _documentosRepository.DeleteAsync(documento.Id);
+        }
+
+        private async Task<Dominio.Entidades.Documento> DocumentoById(Guid id)
+        {
             var documento = await _documentosRepository.GetByIdAsync(id);
             if (documento is null)
             {
                 throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
             }
-
-            await _documentosRepository.DeleteAsync(documento.Id);
+            return documento;
         }
     }
 }
