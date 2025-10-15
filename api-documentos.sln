@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documento.Aplicacion", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documento.Aplicacion.Test", "src\Documento\Aplicacion\Documento.Aplicacion.Test\Documento.Aplicacion.Test.csproj", "{54146CA1-C35A-45D7-9FD1-04B6C28A05BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infraestructura", "Infraestructura", "{A013E193-8A48-4DC9-A9F4-376F074CE16B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,7 @@ Global
 		{47B3ED5B-2228-48D8-B1E0-341051455CF8} = {F1D0D59A-5C14-43B5-A02B-B5A65555B89F}
 		{4AEA2367-98D0-4E87-95E7-52E0D55A58F2} = {47B3ED5B-2228-48D8-B1E0-341051455CF8}
 		{54146CA1-C35A-45D7-9FD1-04B6C28A05BC} = {47B3ED5B-2228-48D8-B1E0-341051455CF8}
+		{A013E193-8A48-4DC9-A9F4-376F074CE16B} = {F1D0D59A-5C14-43B5-A02B-B5A65555B89F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBEB8C53-FC0F-454B-A586-FE3C21B11405}
