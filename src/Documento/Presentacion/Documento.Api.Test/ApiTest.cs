@@ -123,5 +123,29 @@ namespace Documento.Api.Test
             _documentoServiceMock.Verify(s => s.ObtenerDocumentoPorId(documentoId), Times.Once);
         }
 
+        [Fact]
+        public async Task ActualizaDocumento_DebeRetornar_204()
+        {
+            var actualizaDocumento = new ActualizaDocumentoDTO
+            {
+                Titulo = "Contrato 123",
+                Autor = "Ruben Pabon",
+                Tipo = "CONTRATO",
+                Estado = "PENDIENTE"
+            };
+
+            var documentoId = Guid.NewGuid();
+
+            _documentoServiceMock.Setup(s => s.ActualizarDocumento(documentoId, actualizaDocumento)).Returns(Task.CompletedTask);
+
+            var result = await _controller.ActualizarDocumento(documentoId, actualizaDocumento);
+
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(204, noContentResult.StatusCode);
+
+
+            _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
+        }
+
     }
 }
