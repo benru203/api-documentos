@@ -1,6 +1,6 @@
 using Documento.Api.Controllers;
 using Documento.Aplicacion.DTOs;
-using Documento.Aplicacion.Servicios;
+using Documento.Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -8,16 +8,13 @@ namespace Documento.Api.Test
 {
     public class ApiTest
     {
-        private readonly Mock<DocumentoService> _documentoServiceMock;
+        private readonly Mock<IDocumentoService> _documentoServiceMock;
 
         private readonly DocumentoController _controller;
 
         public ApiTest()
         {
-            _documentoServiceMock = new Mock<DocumentoService>(
-                Mock.Of<Dominio.Interfaces.Repositorios.IDocumentoRepository>()
-            );
-
+            _documentoServiceMock = new Mock<IDocumentoService>();
             _controller = new DocumentoController(_documentoServiceMock.Object);
         }
 
@@ -36,13 +33,13 @@ namespace Documento.Api.Test
 
             _documentoServiceMock.Setup(s => s.CreaDocumento(nuevoDocumento)).ReturnsAsync(documentoId);
 
-            var result = await _controller.crearDocumento(nuevoDocumento);
+            var result = await _controller.CrearDocumento(nuevoDocumento);
 
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(201, createdResult.StatusCode);
 
-            var body = Assert.IsType<Dictionary<string, object>>(createdResult.Value);
-            Assert.Equal(documentoId, body["id"]);
+            var body = Assert.IsType<CreaDocumentoResultDTO>(createdResult.Value);
+            Assert.NotEqual(Guid.Empty, body.Id);
 
             _documentoServiceMock.Verify(s => s.CreaDocumento(It.IsAny<CrearDocumentoDTO>()), Times.Once);
         }
