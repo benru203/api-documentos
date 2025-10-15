@@ -42,5 +42,26 @@ namespace Documento.Aplicacion.Test
 
 
         }
+
+        [Fact]
+        public async Task ObtenerDocumento_PorId_Documento_Existe_DebeRetornarDocumentoDTO()
+        {
+
+            var titulo = "Contrato 123";
+            var autor = "Ruben Pabon";
+            var tipo = "CONTRATO";
+            var estado = "PENDIENTE";
+            var documento = new Dominio.Entidades.Documento(titulo, autor, tipo, estado);
+
+            _documentoRepositoryMock.Setup(r => r.GetByIdAsync(documento.Id)).ReturnsAsync(documento);
+
+            var resultado = await _documentoService.ObtenerDocumentoPorId(documento.Id);
+
+            Assert.NotNull(resultado);
+            Assert.NotEqual(Guid.Empty, resultado.Id);
+            Assert.Equal(documento.Titulo, resultado.Titulo);
+
+            _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documento.Id), Times.Once);
+        }
     }
 }
