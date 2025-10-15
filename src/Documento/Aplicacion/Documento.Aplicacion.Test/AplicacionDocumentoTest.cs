@@ -123,5 +123,41 @@ namespace Documento.Aplicacion.Test
             _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documentoId), Times.Once);
         }
 
+
+        [Fact]
+        public async Task EliminarDocumento_DebeEliminarloCorrectamente()
+        {
+            var titulo = "Contrato 123";
+            var autor = "Ruben Pabon";
+            var tipo = "CONTRATO";
+            var estado = "PENDIENTE";
+            var documento = new Dominio.Entidades.Documento(titulo, autor, tipo, estado);
+
+            _documentoRepositoryMock.Setup(r => r.GetByIdAsync(documento.Id)).ReturnsAsync(documento);
+
+            _documentoRepositoryMock.Setup(r => r.DeleteAsync(documento.Id)).Returns(Task.CompletedTask);
+
+            await _documentoService.EliminarDocumento(documento.Id);
+
+        }
+
+        [Fact]
+        public async Task EliminarDocumento__Documento_No_Existe_DebeRetornarExcepcion()
+        {
+
+            var documentoId = Guid.NewGuid();
+            _documentoRepositoryMock.Setup(r => r.GetByIdAsync(documentoId)).ReturnsAsync((Dominio.Entidades.Documento?)null);
+
+            _documentoRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Dominio.Entidades.Documento>())).Returns(Task.CompletedTask);
+
+            var excepcion = await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            {
+                await _documentoService.EliminarDocumento(documentoId);
+            });
+
+            Assert.Contains(documentoId.ToString(), excepcion.Message);
+            _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documentoId), Times.Once);
+        }
+
     }
 }
