@@ -135,9 +135,13 @@ namespace Documento.Aplicacion.Test
 
             _documentoRepositoryMock.Setup(r => r.GetByIdAsync(documento.Id)).ReturnsAsync(documento);
 
-            _documentoRepositoryMock.Setup(r => r.DeleteAsync(documento.Id)).Returns(Task.CompletedTask);
+            _documentoRepositoryMock.Setup(r => r.DeleteAsync(documento)).Returns(Task.CompletedTask);
 
             await _documentoService.EliminarDocumento(documento.Id);
+
+            _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documento.Id), Times.Once);
+
+            _documentoRepositoryMock.Verify(r => r.DeleteAsync(documento), Times.Once);
 
         }
 
@@ -157,6 +161,29 @@ namespace Documento.Aplicacion.Test
 
             Assert.Contains(documentoId.ToString(), excepcion.Message);
             _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documentoId), Times.Once);
+        }
+
+
+        [Fact]
+        public async Task ObtenerDocumento__DebeRetornarListadoDocumentoDTO()
+        {
+            var documentos = new List<Dominio.Entidades.Documento>
+            {
+                new("Contrato 123", "Ruben Pabon", "CONTRATO", "PENDIENTE"),
+                new("Informe 456", "Ruben Pabon", "INFORME", "REGISTRADO")
+            };
+            var pagina = 1;
+            var tamanoPagina = 2;
+            _documentoRepositoryMock.Setup(r => r.GetAllAsync(pagina, tamanoPagina)).ReturnsAsync(documentos);
+
+            var resultado = await _documentoService.Documentos(pagina, tamanoPagina);
+
+            Assert.NotNull(resultado);
+            Assert.Equal(tamanoPagina, resultado.Count());
+            Assert.Contains(resultado, d => d.Titulo == "Contrato 123");
+            Assert.Contains(resultado, d => d.Titulo == "Informe 456");
+
+            _documentoRepositoryMock.Verify(r => r.GetAllAsync(pagina, tamanoPagina), Times.Once);
         }
 
     }
