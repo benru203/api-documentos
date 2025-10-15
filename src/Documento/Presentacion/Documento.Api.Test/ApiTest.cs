@@ -147,5 +147,30 @@ namespace Documento.Api.Test
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
         }
 
+        [Fact]
+        public async Task ActualizaDocumento_IdNoExiste_DebeRetornar_NotFound()
+        {
+            var actualizaDocumento = new ActualizaDocumentoDTO
+            {
+                Titulo = "Contrato 123",
+                Autor = "Ruben Pabon",
+                Tipo = "CONTRATO",
+                Estado = "PENDIENTE"
+            };
+
+            var documentoId = Guid.NewGuid();
+
+            _documentoServiceMock.Setup(s => s.ActualizarDocumento(documentoId, actualizaDocumento)).ThrowsAsync(new KeyNotFoundException($"No se encontró un documento con el Id {documentoId}"));
+
+            var result = await _controller.ActualizarDocumento(documentoId, actualizaDocumento);
+
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+
+            Assert.Equal($"No se encontró un documento con el Id {documentoId}", notFoundResult.Value);
+
+            _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
+        }
+
     }
 }
