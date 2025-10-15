@@ -48,6 +48,32 @@ namespace Documento.Infraestructura.Test
             Assert.Equal(documento.FechaRegistro, documentoGuardado.FechaRegistro);
         }
 
+        [Fact]
+        public async Task ObtenerDocumentoPorId_DebeRetornarDocumentoCorrectamente()
+        {
+            var documentoExistente = await _context.Documentos.FirstAsync();
+            var documentoId = documentoExistente.Id;
+
+            var documento = await _documentoRepository.GetByIdAsync(documentoId);
+
+            Assert.NotNull(documento);
+            Assert.Equal(documentoId, documento.Id);
+            Assert.Equal(documentoExistente.Titulo, documento.Titulo);
+            Assert.Equal(documentoExistente.Autor, documento.Autor);
+            Assert.Equal(documentoExistente.Tipo, documento.Tipo);
+            Assert.Equal(documentoExistente.Estado, documento.Estado);
+            Assert.Equal(documentoExistente.FechaRegistro, documento.FechaRegistro);
+        }
+
+        [Fact]
+        public async Task ObtenerDocumentoPorId_IdNoExiste_DebeRetornarNull()
+        {
+            var documentoId = Guid.NewGuid();
+            var documento = await _documentoRepository.GetByIdAsync(documentoId);
+
+            Assert.Null(documento);
+        }
+
 
     }
 }
