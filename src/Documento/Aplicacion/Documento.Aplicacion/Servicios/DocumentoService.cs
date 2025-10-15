@@ -6,10 +6,10 @@ namespace Documento.Aplicacion.Servicios
     public class DocumentoService
     {
 
-        private readonly IDocumentosRepository _documentosRepository;
+        private readonly IDocumentoRepository _documentosRepository;
 
 
-        public DocumentoService(IDocumentosRepository documentosRepository)
+        public DocumentoService(IDocumentoRepository documentosRepository)
         {
             _documentosRepository = documentosRepository;
         }
