@@ -1,4 +1,5 @@
 using Documento.Aplicacion.DTOs;
+using Documento.Aplicacion.Interfaces;
 using Documento.Aplicacion.Servicios;
 using Documento.Dominio.Interfaces.Repositorios;
 using Moq;
@@ -9,7 +10,7 @@ namespace Documento.Aplicacion.Test
     {
         private readonly Mock<IDocumentoRepository> _documentoRepositoryMock;
 
-        private readonly DocumentoService _documentoService;
+        private readonly IDocumentoService _documentoService;
 
 
         public AplicacionDocumentoTest()

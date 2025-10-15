@@ -1,9 +1,10 @@
 ﻿using Documento.Aplicacion.DTOs;
+using Documento.Aplicacion.Interfaces;
 using Documento.Dominio.Interfaces.Repositorios;
 
 namespace Documento.Aplicacion.Servicios
 {
-    public class DocumentoService
+    public class DocumentoService : IDocumentoService
     {
 
         private readonly IDocumentoRepository _documentosRepository;

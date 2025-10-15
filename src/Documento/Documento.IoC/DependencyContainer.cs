@@ -8,6 +8,7 @@ namespace Documento.IoC
         public static IServiceCollection AddDocumentoService(this IServiceCollection services, string stringConexion)
         {
             services.AddDocumentoInfraestructura(stringConexion);
+            services.AddDocumentoAplicacion();
             return services;
         }
     }
