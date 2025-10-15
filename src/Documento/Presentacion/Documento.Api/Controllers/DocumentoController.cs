@@ -59,6 +59,10 @@ namespace Documento.Api.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 await _service.ActualizarDocumento(Id, actualizaDocumentoDTO);
                 return NoContent();
             }
