@@ -53,5 +53,19 @@ namespace Documento.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{Id:guid")]
+        public async Task<IActionResult> ActualizarDocumento(Guid Id, [FromBody] ActualizaDocumentoDTO actualizaDocumentoDTO)
+        {
+            try
+            {
+                await _service.ActualizarDocumento(Id, actualizaDocumentoDTO);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
