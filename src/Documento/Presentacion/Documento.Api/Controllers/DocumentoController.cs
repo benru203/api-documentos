@@ -19,8 +19,39 @@ namespace Documento.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearDocumento([FromBody] CrearDocumentoDTO crearDocumentoDTO)
         {
-            var nuevoDocumentoId = await _service.CreaDocumento(crearDocumentoDTO);
-            return CreatedAtAction(nameof(CrearDocumento), new CreaDocumentoResultDTO(nuevoDocumentoId));
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var nuevoDocumentoId = await _service.CreaDocumento(crearDocumentoDTO);
+                return CreatedAtAction(nameof(CrearDocumento), new CreaDocumentoResultDTO(nuevoDocumentoId));
+
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{Id:guid}")]
+        public async Task<IActionResult> ObtenerDocumentoId(Guid Id)
+        {
+            try
+            {
+                var documento = await _service.ObtenerDocumentoPorId(Id);
+                if (documento == null)
+                {
+                    return NotFound();
+                }
+                return Ok(documento);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
