@@ -20,5 +20,7 @@ namespace Documento.Aplicacion.DTOs
         [Required(ErrorMessage = "El estado es obligatorio")]
         [StringLength(20, ErrorMessage = "El estado no puede exceder los 20 caracteres.")]
         public string Estado { get; set; } = string.Empty;
+
+
     }
 }
