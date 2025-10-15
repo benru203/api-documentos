@@ -3,7 +3,7 @@ namespace Documento.Dominio.Interfaces.Repositorios
 {
     public interface IDocumentoRepository
     {
-        Task<IEnumerable<Entidades.Documento>> GetAllAsync();
+        Task<IEnumerable<Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina);
 
         Task<Entidades.Documento> GetByIdAsync(Guid id);
 

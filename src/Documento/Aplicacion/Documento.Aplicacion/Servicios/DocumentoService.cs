@@ -65,5 +65,20 @@ namespace Documento.Aplicacion.Servicios
             }
             return documento;
         }
+
+        public async Task<IEnumerable<DocumentoDTO>> Documentos(int pagina, int tamanoPagina)
+        {
+            var documentos = await _documentosRepository.GetAllAsync(pagina, tamanoPagina);
+            return documentos.Select(doc =>
+                new DocumentoDTO(
+                    doc.Id,
+                    doc.Titulo.Valor,
+                    doc.Autor.Valor,
+                    doc.Tipo.Valor,
+                    doc.Estado.Valor,
+                    doc.FechaRegistro
+                )
+            );
+        }
     }
 }

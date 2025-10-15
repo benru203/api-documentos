@@ -26,7 +26,7 @@ namespace Documento.Infraestructura.Repositorios
             await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync()
+        public Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina)
         {
             throw new NotImplementedException();
         }
