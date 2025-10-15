@@ -59,9 +59,26 @@ namespace Documento.Aplicacion.Test
 
             Assert.NotNull(resultado);
             Assert.NotEqual(Guid.Empty, resultado.Id);
-            Assert.Equal(documento.Titulo, resultado.Titulo);
+            Assert.Equal(documento.Titulo.Valor, resultado.Titulo);
 
             _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documento.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task ObtenerDocumento_PorId_Documento_No_Existe_DebeRetornarExcepcion()
+        {
+
+            var documentoId = Guid.NewGuid();
+            _documentoRepositoryMock.Setup(r => r.GetByIdAsync(documentoId)).ReturnsAsync((Dominio.Entidades.Documento?)null);
+
+            var excepcion = await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            {
+                await _documentoService.ObtenerDocumentoPorId(documentoId);
+            });
+
+
+            Assert.Contains(documentoId.ToString(), excepcion.Message);
+            _documentoRepositoryMock.Verify(r => r.GetByIdAsync(documentoId), Times.Once);
         }
     }
 }
