@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Documento.Infraestructura.Test
 {
-    public class InfraestructuraTest
+    public class InfraestructuraTest : IDisposable
     {
         private readonly DocumentoContext _context;
 
@@ -96,6 +96,23 @@ namespace Documento.Infraestructura.Test
 
         }
 
+        [Fact]
+        public async Task EliminarDocumento_DebeEliminarloDB()
+        {
+            var documentoEliminar = await _context.Documentos.FirstAsync();
+            var documentoId = documentoEliminar.Id;
 
+            await _documentoRepository.DeleteAsync(documentoEliminar.Id);
+
+            var documentoEliminado = await _context.Documentos.FirstOrDefaultAsync(d => d.Id == documentoId);
+
+            Assert.Null(documentoEliminado);
+
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
+        }
     }
 }
