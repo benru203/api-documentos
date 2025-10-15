@@ -19,9 +19,11 @@ namespace Documento.Infraestructura.Repositorios
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Dominio.Entidades.Documento documento)
         {
-            throw new NotImplementedException();
+
+            _context.Documentos.Remove(documento);
+            await _context.SaveChangesAsync();
         }
 
         public Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync()

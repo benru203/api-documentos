@@ -53,7 +53,7 @@ namespace Documento.Aplicacion.Servicios
         public async Task EliminarDocumento(Guid id)
         {
             var documento = await DocumentoById(id);
-            await _documentosRepository.DeleteAsync(documento.Id);
+            await _documentosRepository.DeleteAsync(documento);
         }
 
         private async Task<Dominio.Entidades.Documento> DocumentoById(Guid id)

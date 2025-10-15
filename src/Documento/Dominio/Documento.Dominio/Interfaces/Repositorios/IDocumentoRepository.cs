@@ -11,6 +11,6 @@ namespace Documento.Dominio.Interfaces.Repositorios
 
         Task UpdateAsync(Entidades.Documento documento);
 
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(Entidades.Documento documento);
     }
 }
