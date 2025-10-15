@@ -110,6 +110,37 @@ namespace Documento.Infraestructura.Test
 
         }
 
+
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(2, 3)]
+        [InlineData(0, 0)]
+        public async Task ObtenerDocumentos_DebeRetornarListadoDocumentoCorrectamente(int pagina, int tamanoPagina)
+        {
+            var totalDocumentos = await _context.Documentos.CountAsync();
+            var documentosEsperados = await _context.Documentos.Skip((pagina - 1) * tamanoPagina).Take(tamanoPagina).ToListAsync();
+
+            var documentos = await _documentoRepository.GetAllAsync(pagina, tamanoPagina);
+
+            Assert.NotNull(documentos);
+
+            Assert.True(documentos.Count() <= tamanoPagina);
+
+            foreach (var docEsperado in documentosEsperados)
+            {
+                var docEncontrado = documentos.FirstOrDefault(d => d.Id == docEsperado.Id);
+                Assert.NotNull(docEncontrado);
+                Assert.Equal(docEsperado.Titulo, docEncontrado.Titulo);
+                Assert.Equal(docEsperado.Autor, docEncontrado.Autor);
+                Assert.Equal(docEsperado.Tipo, docEncontrado.Tipo);
+                Assert.Equal(docEsperado.Estado, docEncontrado.Estado);
+                Assert.Equal(docEsperado.FechaRegistro, docEncontrado.FechaRegistro);
+            }
+
+
+        }
+
         public void Dispose()
         {
             _context?.Dispose();
