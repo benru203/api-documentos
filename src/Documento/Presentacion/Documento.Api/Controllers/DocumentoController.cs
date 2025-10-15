@@ -75,5 +75,18 @@ namespace Documento.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        public async Task<IActionResult> EliminarDocumento(Guid Id)
+        {
+            try
+            {
+                await _service.EliminarDocumento(Id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
