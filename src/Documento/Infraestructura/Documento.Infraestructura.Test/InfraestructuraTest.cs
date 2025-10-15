@@ -74,6 +74,28 @@ namespace Documento.Infraestructura.Test
             Assert.Null(documento);
         }
 
+        [Fact]
+        public async Task ActualizarDocumento_DebeActualizarloDB()
+        {
+            var documentoExistente = await _context.Documentos.FirstAsync();
+
+            var autor = "Jhon Doe";
+            var estado = "ARCHIVADO";
+
+            documentoExistente.SetAutor(autor);
+            documentoExistente.SetEstado(estado);
+
+            await _documentoRepository.UpdateAsync(documentoExistente);
+
+            var documentoActualizado = await _context.Documentos.FirstOrDefaultAsync(d => d.Id == documentoExistente.Id);
+
+            Assert.NotNull(documentoActualizado);
+            Assert.Equal(autor, documentoActualizado.Autor.Valor);
+            Assert.Equal(estado, documentoActualizado.Estado.Valor);
+            Assert.Equal(documentoExistente.Titulo, documentoActualizado.Titulo);
+
+        }
+
 
     }
 }
