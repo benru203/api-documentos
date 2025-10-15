@@ -21,5 +21,15 @@ namespace Documento.Aplicacion.Servicios
             await _documentosRepository.AddAsync(documento);
             return documento.Id;
         }
+
+        public async Task<DocumentoDTO> ObtenerDocumentoPorId(Guid id)
+        {
+            var documento = await _documentosRepository.GetByIdAsync(id);
+            if (documento is null)
+            {
+                throw new KeyNotFoundException($"No se encontró un documento con el Id {id}");
+            }
+            return new DocumentoDTO(documento.Id, documento.Titulo.Valor, documento.Autor.Valor, documento.Tipo.Valor, documento.Estado.Valor, documento.FechaRegistro);
+        }
     }
 }
