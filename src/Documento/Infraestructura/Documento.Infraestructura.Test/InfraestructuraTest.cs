@@ -102,7 +102,7 @@ namespace Documento.Infraestructura.Test
             var documentoEliminar = await _context.Documentos.FirstAsync();
             var documentoId = documentoEliminar.Id;
 
-            await _documentoRepository.DeleteAsync(documentoEliminar.Id);
+            await _documentoRepository.DeleteAsync(documentoEliminar);
 
             var documentoEliminado = await _context.Documentos.FirstOrDefaultAsync(d => d.Id == documentoId);
 
