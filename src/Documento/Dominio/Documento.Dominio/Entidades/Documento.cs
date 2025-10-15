@@ -17,6 +17,10 @@ namespace Documento.Dominio.Entidades
 
         public DateTime FechaRegistro { get; private set; }
 
+
+        private Documento() { }
+
+
         public Documento(string titulo, string autor, string tipo, string estado)
         {
             Id = Guid.NewGuid();
