@@ -171,5 +171,41 @@ namespace Documento.Api.Test
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
         }
 
+        [Theory]
+        [InlineData("", "", "", "")]
+        [InlineData("", "Ruben Pabon", "CONTRATO", "PENDIENTE")]
+        [InlineData("Contrato 123", "", "CONTRATO", "PENDIENTE")]
+        [InlineData("Contrato 123", "Ruben Pabon", "", "PENDIENTE")]
+        [InlineData("Contrato 123", "Ruben Pabon", "CONTRATO", "")]
+        public async Task ActualizaDocumento_ConDatosInvalidos_DebeRetornar_BadRequest(string titulo, string autor, string tipo, string estado)
+        {
+            var documentoId = Guid.NewGuid();
+            var actualizaDocumento = new ActualizaDocumentoDTO
+            {
+                Titulo = titulo,
+                Autor = autor,
+                Tipo = tipo,
+                Estado = estado
+            };
+
+            var validationContext = new ValidationContext(actualizaDocumento);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(actualizaDocumento, validationContext, validationResults, true);
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var memberName in validationResult.MemberNames)
+                {
+                    _controller.ModelState.AddModelError(memberName, validationResult.ErrorMessage!);
+                }
+            }
+
+            var result = await _controller.ActualizarDocumento(documentoId, actualizaDocumento);
+
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(400, badRequest.StatusCode);
+
+            _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Never);
+        }
+
     }
 }
