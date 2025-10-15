@@ -26,9 +26,12 @@ namespace Documento.Infraestructura.Repositorios
             await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina)
+        public async Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina)
         {
-            throw new NotImplementedException();
+            var documentos = await _context.Documentos.Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
+                .ToListAsync();
+            return documentos;
         }
 
         public async Task<Dominio.Entidades.Documento> GetByIdAsync(Guid id)
