@@ -271,5 +271,46 @@ namespace Documento.Api.Test
         }
 
 
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("Ruben Pabon", "", "")]
+        [InlineData("", "CONTRATO", "")]
+        [InlineData("", "", "REGISTRADO")]
+        public async Task BuscarDocumentos_AutorTipoEstado_DebeRetornar_202_Documento_Correctamente(string autor, string tipo, string estado)
+        {
+            List<DocumentoDTO> documentos = new List<DocumentoDTO> {
+                new(Guid.NewGuid(),"Contrato 123", "Ruben Pabon", "CONTRATO", "PENDIENTE", DateTime.UtcNow),
+                new(Guid.NewGuid(),"Informe 456", "Ruben Pabon", "INFORME", "REGISTRADO", DateTime.UtcNow),
+                new(Guid.NewGuid(),"Acta 789", "Jhon Doe", "ACTA", "PENDIENTE", DateTime.UtcNow)
+            };
+
+            var pagina = 1;
+            var tamanoPagina = 3;
+
+            var documentosPaginados = documentos
+                .Where(d =>
+                    d.Autor.Contains(autor ?? string.Empty) &&
+                    d.Tipo.Contains(tipo ?? string.Empty) &&
+                    d.Estado.Contains(estado ?? string.Empty)
+                )
+                .Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
+                .ToList();
+
+            _documentoServiceMock
+                .Setup(s => s.BusquedaAutorTituloEstado(autor, tipo, estado, pagina, tamanoPagina))
+                .ReturnsAsync(documentosPaginados);
+
+            var result = await _controller.BusquedaAutorTituloEstado(autor, tipo, estado, pagina, tamanoPagina);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(200, okResult.StatusCode);
+
+            var lista = Assert.IsAssignableFrom<IEnumerable<DocumentoDTO>>(okResult.Value);
+            Assert.Equal(documentosPaginados.Count, lista.Count());
+
+            _documentoServiceMock.Verify(s => s.BusquedaAutorTituloEstado(autor, tipo, estado, pagina, tamanoPagina), Times.Once);
+        }
+
     }
 }
