@@ -119,7 +119,16 @@ namespace Documento.Api.Test
             _documentoServiceMock.Setup(s => s.ObtenerDocumentoPorId(documentoId)).ReturnsAsync((DocumentoDTO?)null);
 
             var result = await _controller.ObtenerDocumentoId(documentoId);
-            Assert.IsType<NotFoundResult>(result);
+
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+
+            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
+            .GetType()
+            .GetProperties()
+            .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
+
+            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
             _documentoServiceMock.Verify(s => s.ObtenerDocumentoPorId(documentoId), Times.Once);
         }
 
@@ -166,7 +175,13 @@ namespace Documento.Api.Test
 
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
-            Assert.Equal($"No se encontró un documento con el Id {documentoId}", notFoundResult.Value);
+
+            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
+                .GetType()
+                .GetProperties()
+                .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
+
+            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
 
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
         }
@@ -232,7 +247,13 @@ namespace Documento.Api.Test
 
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
-            Assert.Equal($"No se encontró un documento con el Id {documentoId}", notFoundResult.Value);
+
+            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
+               .GetType()
+               .GetProperties()
+               .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
+
+            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
 
             _documentoServiceMock.Verify(s => s.EliminarDocumento(documentoId), Times.Once);
         }
