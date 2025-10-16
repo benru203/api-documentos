@@ -81,5 +81,20 @@ namespace Documento.Aplicacion.Servicios
                 )
             );
         }
+
+        public async Task<IEnumerable<DocumentoDTO>> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina, int tamanoPagina)
+        {
+            var documentos = await _documentosRepository.FindAutorTipoEstado(autor, tipo, estado, pagina, tamanoPagina);
+            return documentos.Select(doc =>
+                new DocumentoDTO(
+                    doc.Id,
+                    doc.Titulo.Valor,
+                    doc.Autor.Valor,
+                    doc.Tipo.Valor,
+                    doc.Estado.Valor,
+                    doc.FechaRegistro
+                )
+            );
+        }
     }
 }
