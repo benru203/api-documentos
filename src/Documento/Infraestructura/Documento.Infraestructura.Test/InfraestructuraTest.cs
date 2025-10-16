@@ -22,7 +22,7 @@ namespace Documento.Infraestructura.Test
             List<Dominio.Entidades.Documento> documentos = new List<Dominio.Entidades.Documento> {
                 new("Contrato 123", "Ruben Pabon", "CONTRATO", "PENDIENTE"),
                 new("Informe 456", "Ruben Pabon", "INFORME", "REGISTRADO"),
-                new("Acta 789", "Ruben Pabon", "ACTA", "PENDIENTE")
+                new("Acta 789", "Jhon Doe", "ACTA", "PENDIENTE")
             };
 
             _context.Documentos.AddRangeAsync(documentos);
@@ -122,6 +122,46 @@ namespace Documento.Infraestructura.Test
             var documentosEsperados = await _context.Documentos.Skip((pagina - 1) * tamanoPagina).Take(tamanoPagina).ToListAsync();
 
             var documentos = await _documentoRepository.GetAllAsync(pagina, tamanoPagina);
+
+            Assert.NotNull(documentos);
+
+            Assert.True(documentos.Count() <= tamanoPagina);
+
+            foreach (var docEsperado in documentosEsperados)
+            {
+                var docEncontrado = documentos.FirstOrDefault(d => d.Id == docEsperado.Id);
+                Assert.NotNull(docEncontrado);
+                Assert.Equal(docEsperado.Titulo, docEncontrado.Titulo);
+                Assert.Equal(docEsperado.Autor, docEncontrado.Autor);
+                Assert.Equal(docEsperado.Tipo, docEncontrado.Tipo);
+                Assert.Equal(docEsperado.Estado, docEncontrado.Estado);
+                Assert.Equal(docEsperado.FechaRegistro, docEncontrado.FechaRegistro);
+            }
+
+
+        }
+
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("Ruben Pabon", "", "")]
+        [InlineData("", "CONTRATO", "")]
+        [InlineData("", "", "REGISTRADO")]
+        public async Task BuscarDocumentos_AutorTipoEstado_DebeRetornarListadoDocumentoCorrectamente(string autor, string tipo, string estado)
+        {
+            var pagina = 1;
+            var tamanoPagina = 3;
+            var totalDocumentos = await _context.Documentos.Where(d =>
+                    d.Autor.Valor.Contains(autor ?? string.Empty) &&
+                    d.Tipo.Valor.Contains(tipo ?? string.Empty) &&
+                    d.Estado.Valor.Contains(estado ?? string.Empty)
+                ).CountAsync();
+            var documentosEsperados = await _context.Documentos.Where(d =>
+                    d.Autor.Valor.Contains(autor ?? string.Empty) &&
+                    d.Tipo.Valor.Contains(tipo ?? string.Empty) &&
+                    d.Estado.Valor.Contains(estado ?? string.Empty)
+                ).Skip((pagina - 1) * tamanoPagina).Take(tamanoPagina).ToListAsync();
+
+            var documentos = await _documentoRepository.FindAutorTipoEstado(autor, tipo, estado, pagina, tamanoPagina);
 
             Assert.NotNull(documentos);
 
