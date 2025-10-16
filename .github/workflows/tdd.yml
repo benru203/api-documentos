@@ -5,7 +5,7 @@ name: TDD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "main"]
   pull_request:
     branches: [ "dev" ]
 
