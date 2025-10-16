@@ -238,5 +238,38 @@ namespace Documento.Api.Test
         }
 
 
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(2, 3)]
+        [InlineData(0, 0)]
+        public async Task ObtenerDocumentosPaginados_DebeRetornar_200_ListadoDocumentos(int pagina, int tamanoPagina)
+        {
+            List<DocumentoDTO> documentos = new List<DocumentoDTO> {
+                new(Guid.NewGuid(),"Contrato 123", "Ruben Pabon", "CONTRATO", "PENDIENTE", DateTime.UtcNow),
+                new(Guid.NewGuid(),"Informe 456", "Ruben Pabon", "INFORME", "REGISTRADO", DateTime.UtcNow),
+                new(Guid.NewGuid(),"Acta 789", "Ruben Pabon", "ACTA", "PENDIENTE", DateTime.UtcNow)
+            };
+
+            var documentosPaginados = documentos
+                .Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
+                .ToList();
+
+            _documentoServiceMock
+                .Setup(s => s.Documentos(pagina, tamanoPagina))
+                .ReturnsAsync(documentosPaginados);
+
+            var result = await _controller.Documentos(pagina, tamanoPagina);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(200, okResult.StatusCode);
+
+            var lista = Assert.IsAssignableFrom<IEnumerable<DocumentoDTO>>(okResult.Value);
+            Assert.Equal(documentosPaginados.Count, lista.Count());
+
+            _documentoServiceMock.Verify(s => s.Documentos(pagina, tamanoPagina), Times.Once);
+        }
+
+
     }
 }
