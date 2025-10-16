@@ -1,6 +1,7 @@
 ﻿using Documento.Aplicacion.DTOs;
 using Documento.Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Documento.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace Documento.Api.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("Post")]
         public async Task<IActionResult> CrearDocumento([FromBody] CrearDocumentoDTO crearDocumentoDTO)
         {
             try
@@ -37,6 +39,7 @@ namespace Documento.Api.Controllers
         }
 
         [HttpGet("{Id:guid}")]
+        [EnableRateLimiting("Get")]
         public async Task<IActionResult> ObtenerDocumentoId(Guid Id)
         {
             try
@@ -55,6 +58,7 @@ namespace Documento.Api.Controllers
         }
 
         [HttpPut("{Id:guid}")]
+        [EnableRateLimiting("Put")]
         public async Task<IActionResult> ActualizarDocumento(Guid Id, [FromBody] ActualizaDocumentoDTO actualizaDocumentoDTO)
         {
             try
@@ -78,6 +82,7 @@ namespace Documento.Api.Controllers
 
 
         [HttpDelete("{Id:guid}")]
+        [EnableRateLimiting("Delete")]
         public async Task<IActionResult> EliminarDocumento(Guid Id)
         {
             try
@@ -96,10 +101,12 @@ namespace Documento.Api.Controllers
         }
 
         [HttpGet]
+        [EnableRateLimiting("Get")]
         public async Task<IActionResult> Documentos(int pagina = 1, int tamano_pagina = 20)
         {
             try
             {
+                tamano_pagina = Math.Min(tamano_pagina, 100);
                 var respuestaPaginada = await _service.Documentos(pagina, tamano_pagina);
                 return Ok(respuestaPaginada);
             }
