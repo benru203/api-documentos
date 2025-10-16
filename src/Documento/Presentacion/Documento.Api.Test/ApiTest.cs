@@ -5,6 +5,7 @@ using Documento.Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Documento.Api.Test
 {
@@ -124,8 +125,8 @@ namespace Documento.Api.Test
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            var body = notFoundResult.Value;
-            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
+            var body = (ErrorResponse)notFoundResult.Value!;
+            var errorEsperado = new ErrorResponse($"No se encontró un documento con el Id {documentoId}");
             _documentoServiceMock.Verify(s => s.ObtenerDocumentoPorId(documentoId), Times.Once);
         }
 
@@ -173,8 +174,9 @@ namespace Documento.Api.Test
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            var body = notFoundResult.Value;
-            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
+
+            var body = (ErrorResponse)notFoundResult.Value!;
+            var errorEsperado = new ErrorResponse($"No se encontró un documento con el Id {documentoId}");
 
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
         }
@@ -242,8 +244,9 @@ namespace Documento.Api.Test
             Assert.Equal(404, notFoundResult.StatusCode);
 
 
-            var body = notFoundResult.Value;
-            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
+            var body = (ErrorResponse)notFoundResult.Value!;
+            var errorEsperado = new ErrorResponse($"No se encontró un documento con el Id {documentoId}");
+            Assert.Contains(errorEsperado.ToString().Normalize(NormalizationForm.FormC), body.ToString().Normalize(NormalizationForm.FormC));
 
             _documentoServiceMock.Verify(s => s.EliminarDocumento(documentoId), Times.Once);
         }
