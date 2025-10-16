@@ -104,7 +104,7 @@ namespace Documento.Aplicacion.Test
         }
 
         [Fact]
-        public async Task ActualizarDocumento__Documento_No_Existe_DebeRetornarExcepcion()
+        public async Task ActualizarDocumento_Documento_No_Existe_DebeRetornarExcepcion()
         {
 
             var documentoId = Guid.NewGuid();
@@ -147,7 +147,7 @@ namespace Documento.Aplicacion.Test
         }
 
         [Fact]
-        public async Task EliminarDocumento__Documento_No_Existe_DebeRetornarExcepcion()
+        public async Task EliminarDocumento_Documento_No_Existe_DebeRetornarExcepcion()
         {
 
             var documentoId = Guid.NewGuid();
@@ -165,8 +165,40 @@ namespace Documento.Aplicacion.Test
         }
 
 
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("Ruben Pabon", "", "")]
+        [InlineData("", "CONTRATO", "")]
+        [InlineData("", "", "REGISTRADO")]
+        public async Task BuscarDocumento_AutorTipoEstado_DebeRetornarListadoDocumentoDTO(string autor, string tipo, string estado)
+        {
+            var documentos = new List<Dominio.Entidades.Documento>
+            {
+                new("Contrato 123", "Ruben Pabon", "CONTRATO", "PENDIENTE"),
+                new("Informe 456", "Jhon Doe", "INFORME", "REGISTRADO")
+            };
+            var pagina = 1;
+            var tamanoPagina = 2;
+            _documentoRepositoryMock.Setup(r => r.FindAutorTipoEstado(autor, tipo, estado, pagina, tamanoPagina)).ReturnsAsync(documentos);
+
+            var resultado = await _documentoService.BusquedaAutorTituloEstado(autor, tipo, estado, pagina, tamanoPagina);
+
+            Assert.NotNull(resultado);
+            Assert.Equal(tamanoPagina, resultado.Count());
+            if ((!string.IsNullOrWhiteSpace(autor)) || (!string.IsNullOrWhiteSpace(tipo)))
+            {
+                Assert.Contains(resultado, d => d.Titulo == "Contrato 123");
+            }
+            if (!string.IsNullOrWhiteSpace(estado))
+            {
+                Assert.Contains(resultado, d => d.Titulo == "Informe 456");
+            }
+
+            _documentoRepositoryMock.Verify(r => r.FindAutorTipoEstado(autor, tipo, estado, pagina, tamanoPagina), Times.Once);
+        }
+
         [Fact]
-        public async Task ObtenerDocumento__DebeRetornarListadoDocumentoDTO()
+        public async Task ObtenerDocumento_DebeRetornarListadoDocumentoDTO()
         {
             var documentos = new List<Dominio.Entidades.Documento>
             {
