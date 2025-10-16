@@ -12,5 +12,7 @@ namespace Documento.Dominio.Interfaces.Repositorios
         Task UpdateAsync(Entidades.Documento documento);
 
         Task DeleteAsync(Entidades.Documento documento);
+
+        Task<IEnumerable<Entidades.Documento>> FindAutorTipoEstado(string? autor, string? tipo, string? estado, int pagina, int tamanoPagina);
     }
 }
