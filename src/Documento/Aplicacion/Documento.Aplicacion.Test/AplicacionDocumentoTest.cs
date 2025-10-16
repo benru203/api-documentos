@@ -207,14 +207,16 @@ namespace Documento.Aplicacion.Test
             };
             var pagina = 1;
             var tamanoPagina = 2;
-            _documentoRepositoryMock.Setup(r => r.GetAllAsync(pagina, tamanoPagina)).ReturnsAsync(documentos);
+            var total = documentos.Count();
+            _documentoRepositoryMock.Setup(r => r.GetAllAsync(pagina, tamanoPagina)).ReturnsAsync((documentos, total));
 
             var resultado = await _documentoService.Documentos(pagina, tamanoPagina);
 
             Assert.NotNull(resultado);
-            Assert.Equal(tamanoPagina, resultado.Count());
-            Assert.Contains(resultado, d => d.Titulo == "Contrato 123");
-            Assert.Contains(resultado, d => d.Titulo == "Informe 456");
+            Assert.Equal(tamanoPagina, resultado.tamano_pagina);
+            Assert.Equal(total, resultado.total);
+            Assert.Contains(resultado.datos, d => d.Titulo == "Contrato 123");
+            Assert.Contains(resultado.datos, d => d.Titulo == "Informe 456");
 
             _documentoRepositoryMock.Verify(r => r.GetAllAsync(pagina, tamanoPagina), Times.Once);
         }

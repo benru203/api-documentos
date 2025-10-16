@@ -67,10 +67,10 @@ namespace Documento.Aplicacion.Servicios
             return documento;
         }
 
-        public async Task<IEnumerable<DocumentoDTO>> Documentos(int pagina, int tamanoPagina)
+        public async Task<RespuestaPaginadaDTO> Documentos(int pagina, int tamanoPagina)
         {
-            var documentos = await _documentosRepository.GetAllAsync(pagina, tamanoPagina);
-            return documentos.Select(doc =>
+            var (documentos, total) = await _documentosRepository.GetAllAsync(pagina, tamanoPagina);
+            return new RespuestaPaginadaDTO(pagina, tamanoPagina, total, documentos.Select(doc =>
                 new DocumentoDTO(
                     doc.Id,
                     doc.Titulo.Valor,
@@ -79,7 +79,8 @@ namespace Documento.Aplicacion.Servicios
                     doc.Estado.Valor,
                     doc.FechaRegistro
                 )
-            );
+            ));
+
         }
 
         public async Task<IEnumerable<DocumentoDTO>> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina, int tamanoPagina)

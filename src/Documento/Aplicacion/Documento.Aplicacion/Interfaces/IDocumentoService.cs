@@ -12,7 +12,7 @@ namespace Documento.Aplicacion.Interfaces
 
         Task EliminarDocumento(Guid id);
 
-        Task<IEnumerable<DocumentoDTO>> Documentos(int pagina, int tamanoPagina);
+        Task<RespuestaPaginadaDTO> Documentos(int pagina, int tamanoPagina);
 
         Task<IEnumerable<DocumentoDTO>> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina, int tamanoPagina);
     }

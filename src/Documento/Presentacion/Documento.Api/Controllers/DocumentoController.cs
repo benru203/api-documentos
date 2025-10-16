@@ -96,12 +96,12 @@ namespace Documento.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Documentos(int pagina = 1, int tamanoPagina = 20)
+        public async Task<IActionResult> Documentos(int pagina = 1, int tamano_pagina = 20)
         {
             try
             {
-                var documentos = await _service.Documentos(pagina, tamanoPagina);
-                return Ok(documentos);
+                var respuestaPaginada = await _service.Documentos(pagina, tamano_pagina);
+                return Ok(respuestaPaginada);
             }
             catch (Exception ex)
             {

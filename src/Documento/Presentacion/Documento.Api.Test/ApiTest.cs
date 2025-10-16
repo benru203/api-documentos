@@ -249,7 +249,7 @@ namespace Documento.Api.Test
                 new(Guid.NewGuid(),"Informe 456", "Ruben Pabon", "INFORME", "REGISTRADO", DateTime.UtcNow),
                 new(Guid.NewGuid(),"Acta 789", "Ruben Pabon", "ACTA", "PENDIENTE", DateTime.UtcNow)
             };
-
+            var total = documentos.Count();
             var documentosPaginados = documentos
                 .Skip((pagina - 1) * tamanoPagina)
                 .Take(tamanoPagina)
@@ -257,15 +257,16 @@ namespace Documento.Api.Test
 
             _documentoServiceMock
                 .Setup(s => s.Documentos(pagina, tamanoPagina))
-                .ReturnsAsync(documentosPaginados);
+                .ReturnsAsync(new RespuestaPaginadaDTO(pagina, tamanoPagina, total, documentosPaginados));
 
             var result = await _controller.Documentos(pagina, tamanoPagina);
 
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(200, okResult.StatusCode);
 
-            var lista = Assert.IsAssignableFrom<IEnumerable<DocumentoDTO>>(okResult.Value);
-            Assert.Equal(documentosPaginados.Count, lista.Count());
+            var respuestaPaginada = Assert.IsAssignableFrom<RespuestaPaginadaDTO>(okResult.Value);
+            Assert.Equal(documentosPaginados.Count(), respuestaPaginada.datos.Count());
+            Assert.Equal(total, respuestaPaginada.total);
 
             _documentoServiceMock.Verify(s => s.Documentos(pagina, tamanoPagina), Times.Once);
         }
