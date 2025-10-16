@@ -76,6 +76,8 @@ namespace Documento.Api.Controllers
             }
         }
 
+
+        [HttpDelete("{Id:guid")]
         public async Task<IActionResult> EliminarDocumento(Guid Id)
         {
             try
@@ -83,10 +85,16 @@ namespace Documento.Api.Controllers
                 await _service.EliminarDocumento(Id);
                 return NoContent();
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
+
     }
 }
