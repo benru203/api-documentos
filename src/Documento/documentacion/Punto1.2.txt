@@ -1,0 +1,26 @@
+Patrones de Arquitectura
+
+Hexagonal
+seleccione este patrón por su simplicidad y su gran flexibilidad. Este patrón es muy útil para aplicaciones que requieren una gran cantidad de flexibilidad y que se desarrollen en un entorno de desarrollo rápido.
+
+Patrones de Diseño
+
+Repository
+esté patrón lo implemente por su simplicidad y ya que abstrae la logica de la persistencia
+sin importar que tecnologia se implemente  lo que me ayuda a tener una falicidad a la hora de cambiar el origen de
+los datos por ejemplo en los test que use la base de datos en memoria y en la api con sqlserver.
+
+Principios SOLID
+
+en la api aplique los principios de SOLID en diferentes partes de la api
+* Principio de Responsabilidad Única
+    este lo aplique en la entidad de Docuemento ya que su unica responsabilidad es  representar un documento.
+
+* Principio Inversión de Dependiencias
+    este principio lo aplique en la IDocumentoRepository ya que es una abstranción  de la persistencia.
+
+* Principio de Abierto-Cerrado
+    este lo aplique en la implementacion de IDocumentoRepository  ya que DocumentoRepository esta cerrado a modificaciones.
+
+* Principio de Liskov Substitution
+    este lo aplique en la IDocumentoRepository ya que DocumentoRepository puede ser reemplazado por otra implementacion ejemplo DocumentoRepositoryMemory.

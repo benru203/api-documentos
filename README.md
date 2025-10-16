@@ -34,8 +34,6 @@ API REST desarrollada en .NET Core 8 para la gestión de documentos, implementan
 - ✅ Validaciones de negocio en la capa de dominio
 - ✅ Manejo de estados del documento (Registrado, Pendiente, Validado, Archivado)
 - ✅ Documentación automática con Swagger/OpenAPI
-- ✅ Logging estructurado
-- ✅ Manejo centralizado de errores
 
 ### Arquitectura y Patrones
 - 🏗️ **Arquitectura Hexagonal** (Puertos y Adaptadores)
