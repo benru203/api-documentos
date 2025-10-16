@@ -62,6 +62,12 @@ builder.Services.AddRateLimiter(op =>
             }
          )
     );
+
+    op.OnRejected = async (ctx, cancellationToken) =>
+    {
+        ctx.HttpContext.Response.StatusCode = 429;
+        await ctx.HttpContext.Response.WriteAsync("Has excedido el límite de solicitudes. Intenta más tarde.", cancellationToken);
+    };
 });
 
 var app = builder.Build();
