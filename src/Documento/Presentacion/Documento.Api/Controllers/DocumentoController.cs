@@ -1,4 +1,5 @@
-﻿using Documento.Aplicacion.DTOs;
+﻿using Documento.Api.Responses;
+using Documento.Aplicacion.DTOs;
 using Documento.Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -47,7 +48,7 @@ namespace Documento.Api.Controllers
                 var documento = await _service.ObtenerDocumentoPorId(Id);
                 if (documento == null)
                 {
-                    return NotFound(new { error = $"No se encontró un documento con el Id {Id}" });
+                    return NotFound(new ErrorResponse($"No se encontró un documento con el Id {Id}"));
                 }
                 return Ok(documento);
             }
@@ -72,7 +73,7 @@ namespace Documento.Api.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { error = ex.Message });
+                return NotFound(new ErrorResponse(ex.Message));
             }
             catch (Exception ex)
             {
@@ -92,7 +93,7 @@ namespace Documento.Api.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { error = ex.Message });
+                return NotFound(new ErrorResponse(ex.Message));
             }
             catch (Exception ex)
             {
@@ -117,6 +118,7 @@ namespace Documento.Api.Controllers
         }
 
         [HttpGet("buscar")]
+        [EnableRateLimiting("Get")]
         public async Task<IActionResult> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina = 1, int tamanoPagina = 20)
         {
             try

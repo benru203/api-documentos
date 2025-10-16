@@ -1,4 +1,5 @@
 using Documento.Api.Controllers;
+using Documento.Api.Responses;
 using Documento.Aplicacion.DTOs;
 using Documento.Aplicacion.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -123,12 +124,8 @@ namespace Documento.Api.Test
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
-            .GetType()
-            .GetProperties()
-            .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
-
-            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
+            var body = notFoundResult.Value;
+            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
             _documentoServiceMock.Verify(s => s.ObtenerDocumentoPorId(documentoId), Times.Once);
         }
 
@@ -176,12 +173,8 @@ namespace Documento.Api.Test
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
-                .GetType()
-                .GetProperties()
-                .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
-
-            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
+            var body = notFoundResult.Value;
+            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
 
             _documentoServiceMock.Verify(s => s.ActualizarDocumento(documentoId, actualizaDocumento), Times.Once);
         }
@@ -248,12 +241,9 @@ namespace Documento.Api.Test
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            var body = Assert.IsType<Dictionary<string, object>>(notFoundResult.Value
-               .GetType()
-               .GetProperties()
-               .ToDictionary(p => p.Name, p => p.GetValue(notFoundResult.Value)!));
 
-            Assert.Equal($"No se encontró un documento con el Id {documentoId}", body["error"]);
+            var body = notFoundResult.Value;
+            Assert.Equal(new ErrorResponse($"No se encontró un documento con el Id {documentoId}"), body);
 
             _documentoServiceMock.Verify(s => s.EliminarDocumento(documentoId), Times.Once);
         }
