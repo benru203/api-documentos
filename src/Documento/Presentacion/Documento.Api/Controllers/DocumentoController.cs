@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Documento.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/documentos")]
     [ApiController]
     public class DocumentoController : ControllerBase
     {
@@ -54,7 +54,7 @@ namespace Documento.Api.Controllers
             }
         }
 
-        [HttpPut("{Id:guid")]
+        [HttpPut("{Id:guid}")]
         public async Task<IActionResult> ActualizarDocumento(Guid Id, [FromBody] ActualizaDocumentoDTO actualizaDocumentoDTO)
         {
             try
@@ -77,7 +77,7 @@ namespace Documento.Api.Controllers
         }
 
 
-        [HttpDelete("{Id:guid")]
+        [HttpDelete("{Id:guid}")]
         public async Task<IActionResult> EliminarDocumento(Guid Id)
         {
             try
@@ -109,6 +109,7 @@ namespace Documento.Api.Controllers
             }
         }
 
+        [HttpGet("buscar")]
         public async Task<IActionResult> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina = 1, int tamanoPagina = 20)
         {
             try
