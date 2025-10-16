@@ -220,6 +220,23 @@ namespace Documento.Api.Test
             Assert.Equal(204, noContentResult.StatusCode);
         }
 
+        [Fact]
+        public async Task EliminarDocumento_IdNoExiste_DebeRetornar_NotFound()
+        {
+
+            var documentoId = Guid.NewGuid();
+
+            _documentoServiceMock.Setup(s => s.EliminarDocumento(documentoId)).ThrowsAsync(new KeyNotFoundException($"No se encontró un documento con el Id {documentoId}"));
+
+            var result = await _controller.EliminarDocumento(documentoId);
+
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+            Assert.Equal($"No se encontró un documento con el Id {documentoId}", notFoundResult.Value);
+
+            _documentoServiceMock.Verify(s => s.EliminarDocumento(documentoId), Times.Once);
+        }
+
 
     }
 }
