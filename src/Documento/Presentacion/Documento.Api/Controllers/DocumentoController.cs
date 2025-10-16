@@ -25,7 +25,7 @@ namespace Documento.Api.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new { error = ModelState });
                 }
 
                 var nuevoDocumentoId = await _service.CreaDocumento(crearDocumentoDTO);
@@ -34,7 +34,7 @@ namespace Documento.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
 
@@ -47,13 +47,13 @@ namespace Documento.Api.Controllers
                 var documento = await _service.ObtenerDocumentoPorId(Id);
                 if (documento == null)
                 {
-                    return NotFound();
+                    return NotFound(new { error = $"No se encontró un documento con el Id {Id}" });
                 }
                 return Ok(documento);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
 
@@ -72,11 +72,11 @@ namespace Documento.Api.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { error = ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
 
@@ -92,11 +92,11 @@ namespace Documento.Api.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { error = ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
 
