@@ -292,8 +292,14 @@ Edita el archivo `src/DocumentosAPI.API/appsettings.json`:
 # Navegar al proyecto API
 cd src/Documento/Presentacion/Documento.Api
 
+
+#Ejecutar en modo desarrollo con certificado opcional
+dotnet dev-certs https --trust
+
 # Ejecutar en modo desarrollo
 dotnet run
+
+
 
 # O con watch (recarga automática)
 dotnet watch run
