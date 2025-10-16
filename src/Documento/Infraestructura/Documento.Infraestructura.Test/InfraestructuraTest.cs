@@ -121,11 +121,13 @@ namespace Documento.Infraestructura.Test
             var totalDocumentos = await _context.Documentos.CountAsync();
             var documentosEsperados = await _context.Documentos.Skip((pagina - 1) * tamanoPagina).Take(tamanoPagina).ToListAsync();
 
-            var documentos = await _documentoRepository.GetAllAsync(pagina, tamanoPagina);
+            var (documentos, total) = await _documentoRepository.GetAllAsync(pagina, tamanoPagina);
 
             Assert.NotNull(documentos);
 
             Assert.True(documentos.Count() <= tamanoPagina);
+
+            Assert.Equal(totalDocumentos, total);
 
             foreach (var docEsperado in documentosEsperados)
             {

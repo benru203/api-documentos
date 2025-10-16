@@ -39,12 +39,13 @@ namespace Documento.Infraestructura.Repositorios
             return documentos;
         }
 
-        public async Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina)
+        public async Task<(IEnumerable<Dominio.Entidades.Documento>, int)> GetAllAsync(int pagina, int tamanoPagina)
         {
+            var totalDocumentos = await _context.Documentos.CountAsync();
             var documentos = await _context.Documentos.Skip((pagina - 1) * tamanoPagina)
-                .Take(tamanoPagina)
-                .ToListAsync();
-            return documentos;
+               .Take(tamanoPagina)
+               .ToListAsync();
+            return (documentos, totalDocumentos);
         }
 
         public async Task<Dominio.Entidades.Documento> GetByIdAsync(Guid id)
@@ -57,5 +58,6 @@ namespace Documento.Infraestructura.Repositorios
             _context.Documentos.Update(documento);
             await _context.SaveChangesAsync();
         }
+
     }
 }
