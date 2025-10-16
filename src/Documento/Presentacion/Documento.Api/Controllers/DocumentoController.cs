@@ -95,6 +95,33 @@ namespace Documento.Api.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Documentos(int pagina = 1, int tamanoPagina = 20)
+        {
+            try
+            {
+                var documentos = await _service.Documentos(pagina, tamanoPagina);
+                return Ok(documentos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> BusquedaAutorTituloEstado(string? autor, string? tipo, string? estado, int pagina = 1, int tamanoPagina = 20)
+        {
+            try
+            {
+                var documentos = await _service.BusquedaAutorTituloEstado(autor, tipo, estado, pagina, tamanoPagina);
+                return Ok(documentos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
     }
 }
