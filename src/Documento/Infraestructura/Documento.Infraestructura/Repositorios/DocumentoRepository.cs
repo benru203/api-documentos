@@ -26,6 +26,19 @@ namespace Documento.Infraestructura.Repositorios
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Dominio.Entidades.Documento>> FindAutorTipoEstado(string? autor, string? tipo, string? estado, int pagina, int tamanoPagina)
+        {
+            var documentos = await _context.Documentos.Where(d =>
+                    d.Autor.Valor.Contains(autor ?? string.Empty) &&
+                    d.Tipo.Valor.Contains(tipo ?? string.Empty) &&
+                    d.Estado.Valor.Contains(estado ?? string.Empty)
+                )
+                .Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
+                .ToListAsync();
+            return documentos;
+        }
+
         public async Task<IEnumerable<Dominio.Entidades.Documento>> GetAllAsync(int pagina, int tamanoPagina)
         {
             var documentos = await _context.Documentos.Skip((pagina - 1) * tamanoPagina)
