@@ -399,12 +399,7 @@ Content-Type: application/json
 **Response 201 Created:**
 ```json
 {
-  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "titulo": "Manual de Usuario",
-  "autor": "Juan Pérez",
-  "tipo": "INFORME",
-  "estado": "PENDIENTE",
-  "fechaRegistro": "2024-10-16T10:30:00Z"
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 
