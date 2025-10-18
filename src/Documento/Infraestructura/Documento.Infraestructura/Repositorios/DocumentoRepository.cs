@@ -55,15 +55,33 @@ namespace Documento.Infraestructura.Repositorios
 
         public async Task UpdateAsync(Dominio.Entidades.Documento documento)
         {
-            await _context.Documentos
-            .Where(d => d.Id == documento.Id)
-            .ExecuteUpdateAsync(update => update
-                .SetProperty(d => d.Titulo.Valor, documento.Titulo.Valor)
-                .SetProperty(d => d.Autor.Valor, documento.Autor.Valor)
-                .SetProperty(d => d.Estado.Valor, documento.Estado.Valor)
-                .SetProperty(d => d.Tipo.Valor, documento.Tipo.Valor)
-                .SetProperty(d => d.FechaRegistro, documento.FechaRegistro)
-            );
+            var isRelational = _context.Database.IsRelational();
+            if (isRelational)
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "UPDATE Documentos SET Titulo = {0}, Autor = {1}, Estado = {2}, Tipo = {3}, FechaRegistro = {4} WHERE Id = {5}",
+                    documento.Titulo.Valor,
+                    documento.Autor.Valor,
+                    documento.Estado.Valor,
+                    documento.Tipo.Valor,
+                    documento.FechaRegistro,
+                    documento.Id
+                );
+            }
+            else
+            {
+                var doc = await _context.Documentos.FirstOrDefaultAsync(d => d.Id == documento.Id);
+                if (doc != null)
+                {
+                    doc.SetTitulo(documento.Titulo.Valor);
+                    doc.SetAutor(documento.Autor.Valor);
+                    doc.SetEstado(documento.Estado.Valor);
+                    doc.SetTipo(documento.Tipo.Valor);
+                    await _context.SaveChangesAsync();
+                }
+
+            }
+
         }
 
     }
