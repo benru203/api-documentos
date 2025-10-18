@@ -13,8 +13,10 @@ namespace Documento.Infraestructura.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Dominio.Entidades.Documento>(entidad =>
             {
+
                 entidad.HasKey(x => x.Id);
 
                 entidad.OwnsOne(titulo => titulo.Titulo, p =>

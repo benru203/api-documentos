@@ -55,8 +55,15 @@ namespace Documento.Infraestructura.Repositorios
 
         public async Task UpdateAsync(Dominio.Entidades.Documento documento)
         {
-            _context.Documentos.Update(documento);
-            await _context.SaveChangesAsync();
+            await _context.Documentos
+            .Where(d => d.Id == documento.Id)
+            .ExecuteUpdateAsync(update => update
+                .SetProperty(d => d.Titulo.Valor, documento.Titulo.Valor)
+                .SetProperty(d => d.Autor.Valor, documento.Autor.Valor)
+                .SetProperty(d => d.Estado.Valor, documento.Estado.Valor)
+                .SetProperty(d => d.Tipo.Valor, documento.Tipo.Valor)
+                .SetProperty(d => d.FechaRegistro, documento.FechaRegistro)
+            );
         }
 
     }
